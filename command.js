@@ -3,7 +3,7 @@ const {parseUnits, parseEther, Contract} = require("ethers");
 // https://polygon-mumbai-pokt.nodies.app это матик
 // https://goerli.blockpi.network/v1/rpc/public this goerli
 const url = 'https://polygon-mumbai-pokt.nodies.app'
-const privateKey = 'сюда пишеи приватный ключ'
+const privateKey = 'сюда пишем приватный ключ'
 const provider = new ethers.JsonRpcProvider(url)
 const wallet = new ethers.Wallet(privateKey, provider)
 const ERC20 = 'контракт токена'
