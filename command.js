@@ -3,7 +3,7 @@ const {parseUnits, parseEther, Contract} = require("ethers");
 // https://polygon-mumbai-pokt.nodies.app это матик
 // https://goerli.blockpi.network/v1/rpc/public this goerli
 const url = 'https://polygon-mumbai-pokt.nodies.app'
-const privateKey = 'сюда пишем приватный ключ'
+const privateKey = 'приватный ключ кошелька'
 const provider = new ethers.JsonRpcProvider(url)
 const wallet = new ethers.Wallet(privateKey, provider)
 const ERC20 = 'контракт токена'
@@ -27,8 +27,8 @@ async function getBalance() {
 
 async function sendEth() {
     const tx = await wallet.sendTransaction({
-        to: "кому переводим",
-        value: parseEther("количество токенов")
+        to: "адрес кошелька кому отправляем",
+        value: parseEther("количество ETH")
     });
     console.log(tx.hash)
     const receipt = await tx.wait();
@@ -38,11 +38,10 @@ async function sendEth() {
 async function sendErc20() {
     const contract = new Contract(ERC20, abi, wallet)
     const amount = parseUnits("количество токенов", 18);
-    const tx = await contract.transfer("кому переводим", amount)
+    const tx = await contract.transfer("кому отправляем", amount)
     console.log(tx.hash)
     const receipt = await tx.wait();
     console.log(receipt)
-
 }
 
 async function getBalanceERC20(){
@@ -62,4 +61,4 @@ async function getERC20name(){
 }
 
 
-module.exports = {getBalance, getBalanceERC20, getERC20name};
+module.exports = {getBalance, getBalanceERC20, getERC20name, sendErc20, sendEth};
