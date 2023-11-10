@@ -12,12 +12,13 @@ bot.command('balancetoken', async (ctx) => {
     ctx.reply(`${balanceToken} ${erc20name}`)
 })
 bot.command('sendeth', async (ctx) => {
-    ctx.reply(`Отправлено`)
-    let sendEth = await etherBalance.sendEth()
+    let transaction = await etherBalance.sendEth()
+    ctx.reply(`${transaction}`)
 })
 bot.command('sendtoken', async (ctx) => {
-    ctx.reply(`Отправлено`)
-    let sentoken = await etherBalance.sendErc20()
+    let transaction = await etherBalance.sendErc20()
+    let erc20name = await etherBalance.getERC20name()
+    ctx.reply(`${transaction} ${erc20name}`)
 })
 
 bot.launch()
