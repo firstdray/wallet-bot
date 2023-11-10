@@ -26,22 +26,39 @@ async function getBalance() {
 }
 
 async function sendEth() {
+    const balance = await provider.getBalance(wallet.address)
+    let sendValue = parseEther("0.001")
+    let str = ethers.formatEther(sendValue)
+    if (balance >= sendValue) {
     const tx = await wallet.sendTransaction({
         to: "адрес кошелька кому отправляем",
-        value: parseEther("количество ETH")
+        value: parseEther(str)
     });
     console.log(tx.hash)
     const receipt = await tx.wait();
     console.log(receipt)
+    return `Отправлено ${str} ETH`
+    }
+    else {
+        return 'Недостаточно баланса'
+    }
 }
 
 async function sendErc20() {
     const contract = new Contract(ERC20, abi, wallet)
-    const amount = parseUnits("количество токенов", 18);
+    const balanceERC20 = await contract.balanceOf(wallet.address)
+    const valueToken = '11'
+    const amount = parseUnits(valueToken, 18);
+    if (balanceERC20 >= amount){
     const tx = await contract.transfer("кому отправляем", amount)
     console.log(tx.hash)
     const receipt = await tx.wait();
     console.log(receipt)
+    return `Отправлено ${valueToken}`
+    }
+    else {
+        return "Недостаточно токенов"
+    }
 }
 
 async function getBalanceERC20(){
