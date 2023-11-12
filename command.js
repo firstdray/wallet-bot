@@ -3,17 +3,18 @@ const {parseUnits, parseEther, Contract} = require("ethers");
 // https://polygon-mumbai-pokt.nodies.app это матик
 // https://goerli.blockpi.network/v1/rpc/public this goerli
 const url = 'https://polygon-mumbai-pokt.nodies.app'
-const privateKey = 'приватный ключ кошелька'
+const privateKey = 'Сюда приватный ключ'
 const provider = new ethers.JsonRpcProvider(url)
 const wallet = new ethers.Wallet(privateKey, provider)
-const ERC20 = 'контракт токена'
+const ERC20 = 'адрес контракта токена'
 const abi = [
     "function transfer(address to, uint amount)",
     "function balanceOf(address account) public view returns (uint)",
     "function symbol() view returns (string)"
 ]
-async function getBalance() {
-    const balance = await provider.getBalance(wallet.address)
+async function getBalance(network, address) {
+    const provider = ethers.getDefaultProvider(network);
+    const balance = await provider.getBalance(address);
     const balanceInEth = ethers.formatEther(balance) // wei to ether
     // создаём новую переменную в которой наш баланс
     let strNumber = balanceInEth
@@ -22,16 +23,15 @@ async function getBalance() {
     // округляем баланс
     let roundedBalance = number.toFixed(6)
     return roundedBalance
-
 }
 
 async function sendEth() {
     const balance = await provider.getBalance(wallet.address)
-    let sendValue = parseEther("0.001")
+    let sendValue = parseEther("количество крипты")
     let str = ethers.formatEther(sendValue)
     if (balance >= sendValue) {
     const tx = await wallet.sendTransaction({
-        to: "адрес кошелька кому отправляем",
+        to: "кому отправляем",
         value: parseEther(str)
     });
     console.log(tx.hash)
@@ -61,7 +61,7 @@ async function sendErc20() {
     }
 }
 
-async function getBalanceERC20(){
+async function getBalanceERC20(ERC20){
     const contract = new ethers.Contract(ERC20, abi, provider)
     const balanceERC20 = await contract.balanceOf(wallet.address)
     const balanceToken = ethers.formatEther(balanceERC20)
@@ -71,11 +71,10 @@ async function getBalanceERC20(){
     return roundedBalance
 }
 
-async function getERC20name(){
+async function getERC20name(ERC20){
     const contract = new ethers.Contract(ERC20, abi, provider)
     const erc20name = await contract.symbol()
     return erc20name
 }
-
 
 module.exports = {getBalance, getBalanceERC20, getERC20name, sendErc20, sendEth};
